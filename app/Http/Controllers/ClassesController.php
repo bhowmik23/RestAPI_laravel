@@ -37,7 +37,16 @@ class ClassesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'class_name' => 'required|unique:classes|max:25',
+        ]);
+
+        $data = [
+            'class_name' => $request->class_name,
+        ];
+
+        Classes::insert($data);
+        return response('done');
     }
 
     /**
@@ -46,9 +55,10 @@ class ClassesController extends Controller
      * @param  \App\Models\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function show(Classes $classes)
+    public function show(Classes $classes, $id)
     {
-        //
+        $class= Classes::where('id', $id)->first();
+        return response()->json($class);
     }
 
     /**
@@ -69,9 +79,18 @@ class ClassesController extends Controller
      * @param  \App\Models\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Classes $classes)
+    public function update(Request $request, Classes $classes, $id)
     {
-        //
+        $validated = $request->validate([
+            'class_name' => 'required|unique:classes|max:25',
+        ]);
+
+        $data = [
+            'class_name' => $request->class_name,
+        ];
+
+        Classes::where('id', $id)->update($data);
+        return response('done');
     }
 
     /**
@@ -80,8 +99,9 @@ class ClassesController extends Controller
      * @param  \App\Models\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Classes $classes)
+    public function destroy(Classes $classes, $id)
     {
-        //
+        Classes::destroy($id);
+        return response('deleted');
     }
 }
