@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Classes;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 
-class ClassesController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class ClassesController extends Controller
      */
     public function index()
     {
-        $class = Classes::get();
+        $subject = Subject::get();
 
-        return response()->json($class);
+        return response()->json($subject);
     }
 
     /**
@@ -38,36 +38,40 @@ class ClassesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'class_name' => 'required|unique:classes|max:25',
+            'class_id' => 'required',
+            'subject_name' => 'required|unique:subjects|max:25',
+            'subject_code' => 'required|unique:subjects|max:25',
         ]);
 
         $data = [
-            'class_name' => $request->class_name,
+            'class_id' => $request->class_id,
+            'subject_name' => $request->subject_name,
+            'subject_code' => $request->subject_code,
         ];
 
-        Classes::insert($data);
+        Subject::insert($data);
         return response('done');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Classes  $classes
+     * @param  \App\Models\Subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function show(Classes $classes, $id)
+    public function show($id)
     {
-        $class= Classes::findorfail($id);
-        return response()->json($class);
+        $sub = Subject::findorfail($id);
+        return response()->json($sub);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Classes  $classes
+     * @param  \App\Models\Subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function edit(Classes $classes)
+    public function edit(Subject $subject)
     {
         //
     }
@@ -76,32 +80,36 @@ class ClassesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Classes  $classes
+     * @param  \App\Models\Subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Classes $classes, $id)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'class_name' => 'required|unique:classes|max:25',
+            'class_id' => 'required',
+            'subject_name' => 'required|max:25',
+            'subject_code' => 'required|max:25',
         ]);
 
         $data = [
-            'class_name' => $request->class_name,
+            'class_id' => $request->class_id,
+            'subject_name' => $request->subject_name,
+            'subject_code' => $request->subject_code,
         ];
 
-        Classes::where('id', $id)->update($data);
+        Subject::where('id', $id)->update($data);
         return response('done');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Classes  $classes
+     * @param  \App\Models\Subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Classes $classes, $id)
+    public function destroy($id)
     {
-        Classes::destroy($id);
-        return response('deleted');
+        Subject::destroy($id);
+        return response("deleted");
     }
 }
