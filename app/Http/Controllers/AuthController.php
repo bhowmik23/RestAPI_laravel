@@ -29,7 +29,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if ($token = $this->guard()->attempt($credentials)) {
+        if ($token = $this->guard()->claims(['name' => 'Biddut bhowmik'])->attempt($credentials)) {
             return $this->respondWithToken($token);
         }
 
@@ -92,5 +92,11 @@ class AuthController extends Controller
     public function guard()
     {
         return Auth::guard();
+    }
+
+    public function payload()
+    {
+        // $payload = auth()->payload();
+        return auth()->payload();
     }
 }
